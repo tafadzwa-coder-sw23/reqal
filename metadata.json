@@ -1,0 +1,7 @@
+{
+  "name": "ResQ-AI Response",
+  "description": "Next-generation AI-powered emergency dispatch and ambulance tracking system using Gemini for intelligent triage and real-time updates.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
