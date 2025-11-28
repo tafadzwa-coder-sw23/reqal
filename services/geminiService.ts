@@ -1,8 +1,6 @@
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { TriageResponse, PriorityLevel } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
 const triageSchema: Schema = {
   type: Type.OBJECT,
   properties: {
@@ -41,6 +39,9 @@ const triageSchema: Schema = {
 
 export const analyzeEmergency = async (description: string, userName?: string): Promise<TriageResponse> => {
   try {
+    // Initialize AI client here to prevent app crash on load if env vars are missing
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    
     const userContext = userName ? `The caller's name is ${userName}. Address them by name if appropriate.` : "";
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
