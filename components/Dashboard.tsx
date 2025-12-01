@@ -102,6 +102,8 @@ const Dashboard: React.FC<DashboardProps> = ({ triageData, onReset, locationWarn
     }
   };
 
+  const isArrived = statusText === 'ARRIVED' || statusText === 'ON SCENE';
+
   return (
     <div className="w-full max-w-4xl mx-auto p-4 space-y-6">
       
@@ -125,7 +127,7 @@ const Dashboard: React.FC<DashboardProps> = ({ triageData, onReset, locationWarn
         </div>
         <div className="p-4 rounded-xl border border-blue-500/30 bg-blue-900/20 flex flex-col items-center justify-center">
             <span className="text-xs uppercase text-blue-300 font-bold opacity-70">Status</span>
-            <span className={`text-xl font-black ${statusText === 'ARRIVED' || statusText === 'ON SCENE' ? 'animate-pulse text-green-400' : 'text-blue-400'}`}>
+            <span className={`text-xl font-black ${isArrived ? 'animate-pulse text-green-400' : 'text-blue-400'}`}>
                 {statusText}
             </span>
         </div>
@@ -138,7 +140,7 @@ const Dashboard: React.FC<DashboardProps> = ({ triageData, onReset, locationWarn
 
       <div className="grid md:grid-cols-2 gap-6">
           {/* Map Section */}
-          <div className="bg-slate-800/30 rounded-2xl p-6 border border-slate-700 backdrop-blur-sm">
+          <div className="bg-slate-800/30 rounded-2xl p-6 border border-slate-700 backdrop-blur-sm relative overflow-hidden">
              <h3 className="text-slate-400 text-sm font-bold uppercase mb-4 tracking-wider">Live Tracking</h3>
              <RadarMap progress={progress} eta={triageData.etaMinutes} isActive={timeLeft > 0} />
              <div className="mt-6 space-y-2">
@@ -154,6 +156,23 @@ const Dashboard: React.FC<DashboardProps> = ({ triageData, onReset, locationWarn
                      />
                  </div>
              </div>
+
+             {/* ARRIVED OVERLAY */}
+             {isArrived && (
+                 <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-slate-950/85 backdrop-blur-md rounded-2xl p-4 animate-fade-in text-center">
+                    <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-4 border border-green-500/50 shadow-[0_0_20px_rgba(34,197,94,0.3)]">
+                       <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>
+                    </div>
+                    <h4 className="text-white font-bold text-xl mb-1">Unit on Scene</h4>
+                    <p className="text-slate-400 text-sm mb-6">Responders have arrived at your location.</p>
+                    
+                    <a href="tel:911" className="w-full max-w-[200px] bg-red-600 hover:bg-red-500 text-white font-black py-4 rounded-xl shadow-[0_0_40px_rgba(220,38,38,0.5)] flex items-center justify-center gap-2 transition-transform hover:scale-[1.02] hover:-translate-y-1">
+                        <svg className="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+                        CALL 911
+                    </a>
+                    <p className="text-xs text-slate-500 mt-4 max-w-[80%]">If you cannot locate the emergency unit, call 911 immediately.</p>
+                 </div>
+             )}
           </div>
 
           {/* AI Insights & Live Feed */}
